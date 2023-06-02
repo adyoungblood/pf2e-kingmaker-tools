@@ -149,10 +149,12 @@ export async function rollCheck(
 
     await roll.toMessage({flavor: `
         <div>
-        Rolling Skill Check: ${label}, DC ${dc}${meta}
-        <div>
-            ${modifierTags}
-        </div>
+            <h4 style="font-weight: 700; line-height: 1.5em; margin: 0">
+                Skill Check: ${label}, DC ${dc}${meta}
+            </h4>
+            <div>
+                ${modifierTags}
+            </div>
         </div>`});
     await postDegreeOfSuccess(actor, activity, degreeOfSuccess);
 }

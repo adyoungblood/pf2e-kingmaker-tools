@@ -64,7 +64,7 @@ export function createSkillModifiers(
     const abilityModifier = createAbilityModifier(ability, abilityScores);
     const proficiencyModifier = createProficiencyModifier(skillRank, alwaysAddLevel, kingdomLevel);
     const vacancyModifiers = createVacancyModifiers(ability, leaders);
-    // status bonus
+    // untyped bonus
     const investedModifier = createInvestedModifier(kingdomLevel, ability, leaders);
     // item bonus
     const structureModifiers = skillItemBonus ? createStructureModifiers(skillItemBonus) : [];

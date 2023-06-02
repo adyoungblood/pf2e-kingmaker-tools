@@ -260,7 +260,9 @@ export function createActiveSettlementModifiers(
 ): Modifier[] {
     const levelData = getLevelData(kingdom.level);
     const feats = new Set([...kingdom.feats.map(f => f.id), ...kingdom.feats.map(f => f.id)]);
-    const result: Modifier[] = Array.from(feats)
+    const bonus_feats = new Set([...kingdom.bonusFeats.map(f => f.id), ...kingdom.bonusFeats.map(f => f.id)]);
+    const all_feats = new Set([...feats, ...bonus_feats]);
+    const result: Modifier[] = Array.from(all_feats)
         .flatMap(feat => allFeatsByName[feat]?.modifiers ?? []);
     kingdom.modifiers.forEach(modifier => result.push(modifier));
     const isSecondaryTerritory = activeSettlement?.secondaryTerritory;
@@ -419,7 +421,7 @@ export function createInvestedModifier(
             value: getLevelData(kingdomLevel).investedLeadershipBonus,
             enabled: true,
             name: 'Invested Leadership Role',
-            type: 'status',
+            type: 'untyped',
         };
     }
 }
