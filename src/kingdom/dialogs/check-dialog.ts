@@ -146,7 +146,11 @@ export class CheckDialog extends FormApplication<FormApplicationOptions & CheckD
                 phase: this.phase,
                 skill,
                 overrides: this.modifierOverrides,
-            });
+            }) as ModifierWithId[];
+            modifiers.forEach(modifier => {
+                    const override = this.modifierOverrides[modifier.id];
+                    modifier.override = override === undefined ? "-" : (override ? 'enabled' : 'disabled')
+                });
             const total = calculateModifiers(modifiers);
             return [skill, {total, modifiers}];
         })) as Record<Skill, TotalAndModifiers>;

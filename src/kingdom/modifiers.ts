@@ -58,6 +58,7 @@ export function modifierToLabel(modifier: Modifier): string {
 
 export interface ModifierWithId extends Modifier {
     id: string;
+    override?: string;
 }
 
 export function removeUninterestingZeroModifiers(modifiers: ModifierWithId[]): ModifierWithId[] {
