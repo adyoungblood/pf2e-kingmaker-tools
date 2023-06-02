@@ -1,11 +1,11 @@
 {
-  "title": "Pathfinder - Kingmaker Tools (Unofficial)",
+  "title": "Pathfinder - Kingmaker Tools (Super Unofficial)",
   "description": "A collection of utilities to run Kingmaker",
   "version": "0.0.35",
   "scripts": [
     "dist/main.js"
   ],
-  "url": "https://github.com/BernhardPosselt/pf2e-kingmaker-tools",
+  "url": "https://github.com/adyoungblood/pf2e-kingmaker-tools",
   "license": "LICENSE",
   "styles": [
     "styles/style.css",
@@ -103,12 +103,16 @@
       "system": "pf2e"
     }
   ],
-  "manifest": "https://raw.githubusercontent.com/BernhardPosselt/pf2e-kingmaker-tools/master/module.json",
-  "download": "https://github.com/BernhardPosselt/pf2e-kingmaker-tools/releases/download/0.0.35/release.zip",
+  "manifest": "https://raw.githubusercontent.com/adyoungblood/pf2e-kingmaker-tools/master/module.json",
+  "download": "https://github.com/adyoungblood/pf2e-kingmaker-tools/releases/download/0.0.35/release.zip",
   "id": "pf2e-kingmaker-tools",
   "authors": [
     {
       "name": "Bernhard Posselt",
+      "flags": {}
+    },
+    {
+      "name": "Alexander Youngblood",
       "flags": {}
     }
   ],
