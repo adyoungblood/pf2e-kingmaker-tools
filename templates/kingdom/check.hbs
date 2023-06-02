@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        {{#if modifiers.modifiers}}
+        {{#if totalAndModifiers.modifiers}}
             <h3>Modifier Breakdown</h3>
             <table class="km-table">
                 <tr>
@@ -54,7 +54,7 @@
                     <th>Override</th>
                     <th title="If enabled, remove modifier after roll">Consumable</th>
                 </tr>
-                {{#each modifiers.modifiers}}
+                {{#each totalAndModifiers.modifiers}}
                     <tr>
                         <td>{{name}}</td>
                         <td>{{type}}</td>
@@ -76,8 +76,12 @@
                             </select>
                         </td>
                         <td title="If enabled, remove modifier after roll">
-                            {{#if consumable}}
-                                <i class="fa-solid fa-circle-check"></i>
+                            {{#if enabled}}
+                                {{#if consumeId}}
+                                    <i class="fa-solid fa-circle-check"></i>
+                                {{else}}
+                                    <i class="fa-regular fa-circle-xmark"></i>
+                                {{/if}}
                             {{else}}
                                 <i class="fa-regular fa-circle-xmark"></i>
                             {{/if}}
@@ -125,19 +129,19 @@
 
         <div class="activity-choice">
             <button type="button" id="km-roll-skill-assurance"
-                    data-modifier="{{modifiers.assurance}}"
+                    data-modifier="{{totalAndModifiers.total.assurance}}"
                     data-type="{{title}}"
                     data-skill="{{selectedSkill}}"
                     {{#if activity}}data-activity="{{activity}}"{{/if}}
                     data-dc="{{dc}}">
-                Assurance {{modifiers.assurance}} <i class="fa-solid fa-dice-d20"></i></button>
+                Assurance {{totalAndModifiers.total.assurance}} <i class="fa-solid fa-dice-d20"></i></button>
             <button type="button" id="km-roll-skill"
                     {{#if activity}}data-activity="{{activity}}"{{/if}}
                     data-skill="{{selectedSkill}}"
                     data-dc="{{dc}}"
                     data-type="{{title}}"
-                    data-modifier="{{modifiers.total}}">Roll
-                {{modifiers.totalLabel}}
+                    data-modifiers="{{totalAndModifiersString}}">Roll
+                {{totalLabel}}
                 <i class="fa-solid fa-dice-d20"></i></button>
         </div>
     {{/if}}

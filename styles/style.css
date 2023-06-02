@@ -303,6 +303,29 @@ td.skill-value {
     gap: 5px;
 }
 
+.km-roll-tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    list-style-type: none;
+    margin-bottom: 2px;
+    padding-left: 0;
+
+    align-items: center;
+    background-color: transparent;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(black, 0.5);
+    color: black;
+    display: flex;
+    font-weight: 500;
+    font-size: 10;
+    min-height: 1.5em;  
+    padding: 0 0.33em;
+    text-transform: none;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 30%);
+    border-radius: 4px;
+}
+
 #km-add-custom-recipe {
     width: auto;
     float: right;

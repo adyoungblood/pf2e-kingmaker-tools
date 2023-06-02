@@ -4,6 +4,7 @@ import {Skill} from './data/skills';
 import {postDegreeOfSuccessMessage, unslugify} from '../utils';
 import {activityData, ActivityResults} from './data/activityData';
 import {Modifier, modifierToLabel} from './modifiers';
+import {TotalAndModifiers} from './dialogs/check-dialog'
 import {getKingdom, saveKingdom} from './storage';
 import {gainFame} from './kingdom-utils';
 
@@ -14,7 +15,7 @@ export interface RollMeta {
     skill: Skill;
     dc: number;
     total: number;
-    modifier: number;
+    modifiers: TotalAndModifiers | undefined;
 }
 
 export function parseMeta(el: HTMLElement): RollMeta {
@@ -26,7 +27,7 @@ export function parseMeta(el: HTMLElement): RollMeta {
         skill: meta.dataset.skill as Skill,
         degree: meta.dataset.degree as StringDegreeOfSuccess,
         formula: meta.dataset.formula as string,
-        modifier: parseInt(meta.dataset.modifier ?? '0', 10),
+        modifiers: (meta.dataset.modifiers ? JSON.parse(meta.dataset.modifiers!) : undefined) as TotalAndModifiers | undefined,
     };
 }
 
@@ -45,7 +46,7 @@ export function parseUpgradeMeta(el: HTMLElement): ActivityResultMeta {
 
 
 export async function reRoll(actor: Actor, el: HTMLElement, type: 'fame' | 're-roll' | 'keep-higher' | 'keep-lower'): Promise<void> {
-    const {total, formula, activity, skill, dc, modifier} = parseMeta(el);
+    const {total, formula, activity, skill, dc, modifiers} = parseMeta(el);
     const label = activity ? unslugify(activity) : unslugify(skill);
     let reRollFormula = formula;
     if (type === 'fame') {
@@ -63,7 +64,7 @@ export async function reRoll(actor: Actor, el: HTMLElement, type: 'fame' | 're-r
         activity,
         dc,
         skill,
-        modifier,
+        modifiers,
         actor,
     });
 }
@@ -98,6 +99,10 @@ export async function changeDegree(actor: Actor, el: HTMLElement, type: 'upgrade
     await postComplexDegreeOfSuccess(actor, getDegreeFromKey(newDegree), activity);
 }
 
+function toTagElement(label: string): string {
+    return `<span class="km-roll-tag">${label}</span>`
+}
+
 export async function rollCheck(
     {
         formula,
@@ -105,7 +110,7 @@ export async function rollCheck(
         activity,
         dc,
         skill,
-        modifier,
+        modifiers,
         actor,
     }: {
         formula: string,
@@ -113,13 +118,14 @@ export async function rollCheck(
         activity: Activity | undefined,
         dc: number,
         skill: Skill,
-        modifier: number,
+        modifiers: TotalAndModifiers | undefined,
         actor: Actor,
     }
 ): Promise<void> {
     const roll = await new Roll(formula).roll();
     const total = roll.total;
-    const dieNumber = total - modifier;
+    const total_modifier = modifiers ? modifiers?.total.value : 0;
+    const dieNumber = total - total_modifier;
     const degreeOfSuccess = determineDegreeOfSuccess(dieNumber, total, dc);
     const meta = `
         <div class="km-roll-meta" hidden 
@@ -129,9 +135,25 @@ export async function rollCheck(
             data-skill="${skill}"
             data-dc="${dc}"
             data-total="${total}"
-            data-modifier="${modifier}"
+            data-modifiers="${JSON.stringify(modifiers)}"
         ></div>`;
-    await roll.toMessage({flavor: `Rolling Skill Check: ${label}, DC ${dc}${meta}`});
+
+    const modifierTags = modifiers?.modifiers
+        .filter((m) => m.enabled)
+        .map((modifier) => {
+            const sign = modifier.value < 0 ? "" : "+";
+            const label = `${modifier.name} ${sign}${modifier.value}`;
+            return toTagElement(label);
+        })
+        .join(" ");
+
+    await roll.toMessage({flavor: `
+        <div>
+        Rolling Skill Check: ${label}, DC ${dc}${meta}
+        <div>
+            ${modifierTags}
+        </div>
+        </div>`});
     await postDegreeOfSuccess(actor, activity, degreeOfSuccess);
 }
 

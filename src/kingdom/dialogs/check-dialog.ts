@@ -39,7 +39,7 @@ interface CheckFormData {
     consumeModifiers: Record<string, boolean>;
 }
 
-interface TotalAndModifiers {
+export interface TotalAndModifiers {
     total: ModifierTotals;
     modifiers: ModifierWithId[];
 }
@@ -162,7 +162,9 @@ export class CheckDialog extends FormApplication<FormApplicationOptions & CheckD
             activity: this.activity,
             selectableSkills: this.createSelectableSkills(skillModifiers),
             selectedSkill: this.selectedSkill,
-            modifiers: this.createModifiers(skillModifiers[this.selectedSkill]),
+            totalLabel: ((total => {return total >= 0 ? `+${total}` : total})(skillModifiers[this.selectedSkill].total.value)),
+            totalAndModifiers: skillModifiers[this.selectedSkill],
+            totalAndModifiersString: JSON.stringify(skillModifiers[this.selectedSkill]),
             phase: this.phase,
             customModifiers: this.customModifiers,
         };
@@ -191,19 +193,19 @@ export class CheckDialog extends FormApplication<FormApplicationOptions & CheckD
         $html.querySelector('#km-roll-skill-assurance')?.addEventListener('click', async (event) => {
             const target = event.currentTarget as HTMLButtonElement;
             const dc = parseInt(target.dataset.dc ?? '0', 10);
-            const modifier = parseInt(target.dataset.modifier ?? '0', 10);
+            const modifiers = (target.dataset.modifiers ? JSON.parse(target.dataset.modifiers!) : undefined) as TotalAndModifiers | undefined;
             const activity = target.dataset.activity as Activity | undefined;
             const label = target.dataset.type!;
             const skill = target.dataset.skill as Skill;
 
-            const formula = `${modifier}`;
+            const formula = `${modifiers?.total.value}`;
             await rollCheck({
                 formula,
                 label,
                 activity,
                 dc,
                 skill,
-                modifier,
+                modifiers,
                 actor: this.actor,
             });
             await this.onRoll(this.consumeModifiers);
@@ -213,19 +215,22 @@ export class CheckDialog extends FormApplication<FormApplicationOptions & CheckD
         $html.querySelector('#km-roll-skill')?.addEventListener('click', async (event) => {
             const target = event.currentTarget as HTMLButtonElement;
             const dc = parseInt(target.dataset.dc ?? '0', 10);
-            const modifier = parseInt(target.dataset.modifier ?? '0', 10);
+            const modifiers = (target.dataset.modifiers ? JSON.parse(target.dataset.modifiers!) : undefined) as TotalAndModifiers | undefined;
+            const total_modifier = modifiers?.modifiers
+                .filter((m) => m.enabled)
+                .reduce((partialSum, m) => partialSum + m.value, 0);
             const activity = target.dataset.activity as Activity | undefined;
             const label = target.dataset.type!;
             const skill = target.dataset.skill as Skill;
 
-            const formula = `1d20+${modifier}`;
+            const formula = `1d20+${modifiers?.total.value}`;
             await rollCheck({
                 formula,
                 label,
                 activity,
                 dc,
                 skill,
-                modifier,
+                modifiers,
                 actor: this.actor,
             });
             await this.onRoll(this.consumeModifiers);
@@ -261,32 +266,6 @@ export class CheckDialog extends FormApplication<FormApplicationOptions & CheckD
             });
     }
 
-    private createModifiers(skillModifier: TotalAndModifiers | undefined): object | undefined {
-        if (skillModifier) {
-            const total = skillModifier.total.value;
-            const totalLabel = total >= 0 ? `+${total}` : total;
-            return {
-                total,
-                totalLabel,
-                assurance: skillModifier.total.assurance,
-                modifiers: skillModifier.modifiers.map(modifier => {
-                    const type = capitalize(modifier.type);
-                    const override = this.modifierOverrides[modifier.id];
-                    return {
-                        name: modifier.name,
-                        type: modifier.value < 0 ? `${type} Penalty` : `${type} Bonus`,
-                        value: modifier.value,
-                        enabled: modifier.enabled,
-                        override: override === undefined ? '-' : (override ? 'enabled' : 'disabled'),
-                        id: modifier.id,
-                        consumable: modifier.consumeId !== undefined &&
-                            this.consumeModifiers.has(modifier.consumeId),
-                    };
-                }),
-            };
-        }
-    }
-
     /**
      * Make all bonuses and penalties positive
      * @param customModifiers
@@ -301,5 +280,5 @@ export class CheckDialog extends FormApplication<FormApplicationOptions & CheckD
                 }];
                 return x;
             })) as CustomModifiers;
-    }
+    } 
 }
