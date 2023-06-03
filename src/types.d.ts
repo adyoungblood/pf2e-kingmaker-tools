@@ -39,6 +39,7 @@ declare global {
                 editStructureMacro: (actor: any) => Promise<void>,
                 rollExplorationSkillCheck: (skill: string, effect: string) => Promise<void>,
                 rollSkillDialog: () => Promise<void>,
+                rollKingdomSkillCheck: (activity: Activity, skill: Skill, phase: KingdomPhase, dc: number) => void,
             };
         };
         pf2e: {

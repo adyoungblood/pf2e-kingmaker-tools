@@ -6,6 +6,7 @@ import {Activity, KingdomPhase} from './data/activities';
 import {
     calculateModifiers,
     createAbilityModifier,
+    createActiveSettlementModifiers,
     createInvestedModifier,
     createProficiencyModifier,
     createRuinModifier,
@@ -14,9 +15,16 @@ import {
     createVacancyModifiers,
     Modifier,
     ModifierTotals,
+    ModifierWithId,
     processModifiers,
 } from './modifiers';
 import {SkillItemBonus, SkillItemBonuses} from './data/structures';
+import {Kingdom} from './data/kingdom';
+import { getKingdom } from './storage';
+import { getBooleanSetting } from '../settings';
+import { TotalAndModifiers } from './dialogs/check-dialog';
+import { rollCheck } from './rolls';
+import { getActiveSettlementStructureResult, getSettlement, getSettlementsWithoutLandBorders } from './scene';
 
 
 interface SkillStats {
@@ -144,5 +152,55 @@ export function calculateSkills(
             abilityLabel: capitalize(ability),
             total,
         };
+    });
+}
+
+export function rollKingdomSkillCheck(game: Game, activity: Activity, skill: Skill, phase: KingdomPhase, dc: number): void {
+    const sheetActor = game?.actors?.find(a => a.name === 'Kingdom Sheet');
+    if (!sheetActor) {
+        return;
+    }
+    const kingdom = getKingdom(sheetActor!);
+    const activeSettlementStructureResult = getActiveSettlementStructureResult(game, kingdom);
+    const activeSettlement = getSettlement(game, kingdom, kingdom.activeSettlement);
+    const skillRanks = kingdom.skillRanks;
+    // const applicableSkills = this.type === 'skill' ? [this.skill!] : this.getActivitySkills(skillRanks);
+    const additionalModifiers: Modifier[] = createActiveSettlementModifiers(
+        kingdom,
+        activeSettlement?.settlement,
+        activeSettlementStructureResult,
+        getSettlementsWithoutLandBorders(game, kingdom),
+    );
+    // const convertedCustomModifiers: Modifier[] = createCustomModifiers(customModifiers);
+    
+    const ability = skillAbilities[skill];
+    const modifiers = createSkillModifiers({
+        ruin: kingdom.ruin,
+        unrest: kingdom.unrest,
+        skillRank: skillRanks[skill],
+        abilityScores: kingdom.abilityScores,
+        leaders: kingdom.leaders,
+        kingdomLevel: kingdom.level,
+        alwaysAddLevel: getBooleanSetting(game, 'kingdomAlwaysAddLevel'),
+        ability,
+        skillItemBonus: activeSettlementStructureResult?.merged?.skillBonuses?.[skill],
+        additionalModifiers: [...additionalModifiers,], //...convertedCustomModifiers],
+        phase: phase,
+        skill,
+    }) as ModifierWithId[];
+    const total = calculateModifiers(modifiers);
+    const totalAndModifiers = {total, modifiers} as TotalAndModifiers;
+
+    const formula = `1d20+${total.value}`;
+    const label = capitalize(skill);
+
+    rollCheck({
+        formula,
+        label,
+        activity,
+        dc,
+        skill,
+        modifiers: totalAndModifiers,
+        actor: sheetActor
     });
 }

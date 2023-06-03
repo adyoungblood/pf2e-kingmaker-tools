@@ -6,6 +6,8 @@ import {rollKingmakerWeather} from './kingmaker-weather';
 import {randomEncounterDialog} from './random-encounters';
 import {rollExplorationSkillCheck, rollSkillDialog} from './skill-checks';
 import {rollKingdomEvent} from './kingdom-events';
+import {rollKingdomSkillCheck} from './kingdom/skills'
+import {Skill} from './kingdom/data/skills';
 import {subsist} from './subsist';
 import {
     camouflageCampsite,
@@ -26,6 +28,7 @@ import {addOngoingEvent, changeDegree, parseUpgradeMeta, reRoll} from './kingdom
 import {kingdomChatButtons} from './kingdom/chat-buttons';
 import {StringDegreeOfSuccess} from './degree-of-success';
 import {showArmy} from './armies/sheet';
+import { Activity, KingdomPhase } from './kingdom/data/activities';
 
 Hooks.on('ready', async () => {
     if (game instanceof Game) {
@@ -96,6 +99,7 @@ Hooks.on('ready', async () => {
                         await showStructureEditDialog(gameInstance, actor);
                     }
                 },
+                rollKingdomSkillCheck: (activity: Activity, skill: Skill, phase: KingdomPhase, dc: number): void => rollKingdomSkillCheck(gameInstance, activity, skill, phase, dc),
             },
         };
         const rollModeChoices = {
