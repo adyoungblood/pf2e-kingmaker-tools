@@ -224,7 +224,7 @@ async function postComplexDegreeOfSuccess(actor: Actor, degreeOfSuccess: DegreeO
     if (results) {
         const kingdom = getKingdom(actor);
         const modifiers = results.modifiers;
-        const message = results.msg;
+        const message = `${activity}: ` + results.msg;
         const buttons = modifiers === undefined
             ? buildChatButtons([], resultKey)
             : buildChatButtons(modifiers(kingdom), resultKey, activity);
