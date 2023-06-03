@@ -1918,7 +1918,7 @@ You take time to relax, and you extend the chance to unwind to your citizens as 
         phase: 'leadership',
         dc: 'control',
         title: 'Spread the Legend',
-        description: 'Linzi works to spread the word of the party’s heroics and achievements, both through word of mouth and by distributing chapbooks or one-sheets detailing their exploits. Attempt a basic Arts check to determine the success of Linzi’s efforts. If she has secured a printing press for the kingdom after the PCs help with her quest (see To Ask for Forgiveness, below), the Arts check gains a +2 item bonus.',
+        description: 'Linzi works to spread the word of the party’s heroics and achievements, both through word of mouth and by distributing chapbooks or one-sheets detailing their exploits. Attempt a basic Arts check to determine the success of Linzi’s efforts.',
         skills: simpleRank(['arts']),
         criticalSuccess: {
             msg: `Not only do Linzi’s stories bring pride and patriotism to the nation, but they also help increase its glory. ${loseUnrest('1d6')}, and ${createResourceButton({type: 'fame', turn: 'next', value: '1'})}. In addition, if the kingdom experiences a dangerous random event during this turn’s Event Phase, reduce that event’s level modifier by 1.`,
