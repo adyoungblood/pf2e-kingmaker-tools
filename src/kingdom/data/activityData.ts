@@ -211,7 +211,7 @@ You can use Capital Investment to repay funds from Tap Treasury (page 528). In t
         dc: 'control',
         requirement: 'You have Reconnoitered the hex to be claimed during hexploration. This hex must be adjacent to at least one hex that’s already part of your kingdom. If the hex to be claimed contains dangerous hazards or monsters, they must first be cleared out—either via standard adventuring or the Clear Hex activity.',
         description: `Your surveyors fully explore the hex and attempt to add it into your kingdom’s domain. ${loseRP(1)} and then attempt a basic Exploration, Intrigue, Magic, or Wilderness check.`,
-        skills: simpleRank(['exploration', 'intrigue', 'magic', 'wilderness']),
+        skills: simpleRank(['exploration', 'intrigue', 'scholarship', 'wilderness']),
         criticalSuccess: {
             msg: `You claim the hex and immediately add it to your territory, ${gainSize(1)} (this affects all statistics determined by Size; see page 532). Your occupation of the hex goes so smoothly that you can immediately attempt another Region activity.`,
         },
@@ -563,7 +563,7 @@ You must be at least master in Magic to attempt a Magic check. When you do so, c
         dc: 'control',
         description: `You plant crops and establish livestock in permanent farms, ranches, and other growing operations to create Farmland (page 535). If you’re attempting to Establish Farmland in a hex that is predominantly plains, you must ${loseRP(1)} and the check is against your Control DC. If you’re targeting a hex that is predominantly hills, you must spend ${loseRP(2)} and the check is against your Control DC + 5.`,
         requirement: 'Plains or hills are the predominant terrain feature in the hex; the hex is in the influence of one of your settlements.',
-        skills: simpleRank(['agriculture']),
+        skills: simpleRank(['agriculture'], 1),
         criticalSuccess: {
             msg: 'You establish two adjacent Farmland hexes instead of one. If your target hex was a hills hex, the additional hex may be a hills hex or a plains hex; otherwise, the additional hex must be a plains hex. If no appropriate hex is available, treat this result as a regular success instead.',
         },
@@ -586,7 +586,7 @@ You must be at least master in Magic to attempt a Magic check. When you do so, c
         dc: 'control',
         description: 'You draw up plans, gather resources, entice citizens, and establish boundaries to found a brand new settlement in the hex. Attempt a basic Engineering, Industry, Politics, or Scholarship check. If you cannot pay the RP required by the result of this check, treat your result as a critical failure. A settlement always starts as a village. See page 540 for further details about building settlements.',
         requirement: 'The hex in which you’re establishing the settlement has been Cleared and doesn’t currently have a settlement (including a Freehold) in it.',
-        skills: simpleRank(['engineering', 'industry', 'politics', 'scholarship']),
+        skills: simpleRank(['engineering', 'industry', 'politics', 'magic']),
         criticalSuccess: {
             msg: `You establish the settlement largely with the aid of enthusiastic volunteers. ${loseRP('1d6')}`,
         },

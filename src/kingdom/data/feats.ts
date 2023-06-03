@@ -120,14 +120,29 @@ other lands, and they hire one another’s workers to supply the labor they need
         level: 1,
         prerequisites: 'Trained in Magic',
         text: `Magic has an honored place in your society, and your people incorporate it into their everyday work to make
-life easier. You gain a +1 status bonus to Magic checks, and you can use Magic checks in place of Engineering checks. In addition, as magic-wielding NPCs find your nation a comfortable place to live and work, you reduce the cost of using the Hire Adventurers activity to 1 RP.`,
+life easier. You gain a +1 status bonus to Magic checks, and if you're an Expert in magic, you gain a +1 circumstance bonus to Engineering checks. If you're a master in Magic, increase the bonus to +2. In addition, as magic-wielding NPCs find your nation a comfortable place to live and work, you reduce the cost of using the Hire Adventurers activity to 1 RP.`,
         modifiers: [{
             name: 'Practical Magic',
             type: 'status',
             skills: ['magic'],
             enabled: true,
             value: 1,
-        }],
+        },
+        {
+            name: 'Practical Magic (Expert Magic, Engineering checks)',
+            type: 'circumstance',
+            skills: ['engineering'],
+            enabled: false,
+            value: 1
+        },
+        {
+            name: 'Practical Magic (Master Magic, Engineering checks)',
+            type: 'circumstance',
+            skills: ['engineering'],
+            enabled: false,
+            value: 2
+        }
+        ],
     },
     {
         // not automated: re-roll on a crit failure after flat check 11

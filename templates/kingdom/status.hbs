@@ -79,18 +79,7 @@
                 </select>
             </td>
             <td>
-                {{#unless isCompanion}}
-                    <input type="text" value="{{name}}" name="leaders.{{@key}}.name">
-                {{/unless}}
-                {{#if isCompanion}}
-                    <select name="leaders.{{@key}}.name">
-                        {{#select name}}
-                            {{#each ../companions}}
-                                <option value="{{this}}">{{this}}</option>
-                            {{/each}}
-                        {{/select}}
-                    </select>
-                {{/if}}
+                <input type="text" value="{{name}}" name="leaders.{{@key}}.name">
             </td>
             <td><input type="checkbox" {{checked invested}} name="leaders.{{@key}}.invested"></td>
             <td><input type="checkbox" {{checked vacant}} name="leaders.{{@key}}.vacant"></td>
