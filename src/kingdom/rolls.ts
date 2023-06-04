@@ -1,4 +1,4 @@
-import {Activity} from './data/activities';
+import {Activity, createActivityLabel} from './data/activities';
 import {DegreeOfSuccess, degreeToProperty, determineDegreeOfSuccess, StringDegreeOfSuccess} from '../degree-of-success';
 import {Skill} from './data/skills';
 import {postDegreeOfSuccessMessage, unslugify} from '../utils';
@@ -150,7 +150,7 @@ export async function rollCheck(
     await roll.toMessage({flavor: `
         <div>
             <h4 style="font-weight: 700; line-height: 1.5em; margin: 0">
-                Skill Check: ${label}, DC ${dc}, Activity ${activity}${meta}
+                Skill Check: ${label}, DC ${dc}${meta}
             </h4>
             <div>
                 ${modifierTags}
@@ -224,7 +224,7 @@ async function postComplexDegreeOfSuccess(actor: Actor, degreeOfSuccess: DegreeO
     if (results) {
         const kingdom = getKingdom(actor);
         const modifiers = results.modifiers;
-        const message = `${activity}: ` + results.msg;
+        const message = `${createActivityLabel(activity, kingdom.level)}: ${results.msg}`;
         const buttons = modifiers === undefined
             ? buildChatButtons([], resultKey)
             : buildChatButtons(modifiers(kingdom), resultKey, activity);
